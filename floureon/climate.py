@@ -4,7 +4,7 @@ from datetime import timedelta
 from datetime import datetime
 from socket import timeout
 
-import custom_components.broadlink.pid_controller as pid_controller
+import custom_components.floureon.pid_controller as pid_controller
 import broadlink
 
 import voluptuous as vol
