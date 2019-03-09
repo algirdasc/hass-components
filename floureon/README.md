@@ -1,5 +1,7 @@
-More info about PID: https://github.com/fabiannydegger/custom_components
+# Intro
+Component uses Floureon or other broadlink based Chinese wifi thermostat and tries to apply PID calculations for setting floor temperature as close as posible to targeted temperature. It uses broadlink python lib and *fabiannydegger's* **smart_thermostat** component. More info about Smart Thermostat / PID component: https://github.com/fabiannydegger/custom_components
 
+# Configuration
 Required parameters:
 ```
 - platform: floureon
@@ -32,12 +34,10 @@ Example:
   target_temp: 23
   autotune: "some-overshoot"
   initial_operation_mode: eco
-  ki: 5.476
-  kp: 8.488
-  kd: 8.771
-  pwm: 300
   check_interval:
     seconds: 30
   scan_interval:
     seconds: 15
 ```
+# Autotune
+If you set autotune, watch Home Assistant logs for calculation results. As there is no automated configuration modification, you must write those numbers (Kp, Ki, Kd) by yourself to your configuration file.
