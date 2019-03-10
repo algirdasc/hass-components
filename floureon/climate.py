@@ -214,9 +214,9 @@ class BroadlinkPIDThermostat(ClimateDevice):
             device = self.thermostat()
             if device.auth():
                 now = datetime.now()
-                device.set_time(now.hour, now.minute, now.second, now.weekday())
+                device.set_time(now.hour, now.minute, now.second, now.weekday() + 1)
                 _LOGGER.info("Thermostat %s set time to %s:%s:%s, weekday %s",
-                             now.hour, now.minute, now.second, now.weekday())
+                             now.hour, now.minute, now.second, now.weekday() + 1)
         except timeout:
             _LOGGER.error("Thermostat %s set_time timeout", self._name)
         except Exception:
