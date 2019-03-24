@@ -259,6 +259,7 @@ class BroadlinkPIDThermostat(ClimateDevice):
                         self._target_temp = self._thermostat_target_temp
                     elif data["power"] == BROADLINK_POWER_ON and data["auto_mode"] == BROADLINK_MODE_MANUAL:
                         self._current_operation = STATE_MANUAL
+                        self._target_temp = self._thermostat_target_temp
 
         except timeout:
             _LOGGER.warning("Thermostat %s read_status timeout", self._name)
