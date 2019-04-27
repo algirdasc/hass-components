@@ -1,0 +1,8 @@
+{
+  "domain": "secolink",
+  "name": "Secolink",
+  "documentation": "https://github.com/algirdasc/hass-components",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": []
+}
