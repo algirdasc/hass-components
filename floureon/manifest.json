@@ -4,5 +4,5 @@
   "documentation": "https://github.com/algirdasc/hass-components",
   "dependencies": [],
   "codeowners": [],
-  "requirements": []
+  "requirements": ["broadlink==0.9.0"]
 }
