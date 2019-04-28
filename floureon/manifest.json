@@ -1,5 +1,5 @@
 {
-  "domain": "climate",
+  "domain": "floureon",
   "name": "Floureon PID",
   "documentation": "https://github.com/algirdasc/hass-components",
   "dependencies": [],
