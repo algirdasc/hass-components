@@ -7,8 +7,6 @@ Required parameters:
 - platform: floureon
   host: <thermostat ip / hostname>
   mac: <thermostat mac address>
-  target_temp: <default target temperature>
-  away_temp: <away temperature>
   name: <thermostat name>
   check_interval: <time period> for calculating PID control output
 ```
@@ -30,14 +28,10 @@ Example:
   name: livingroom_floor
   mac: 78:0f:77:00:00:00
   host: 192.168.0.1
-  away_temp: 10
-  target_temp: 23
   autotune: "some-overshoot"
   initial_operation_mode: eco
   check_interval:
     seconds: 30
   scan_interval:
     seconds: 15
-```
-# Autotune
-If you set autotune, watch Home Assistant logs for calculation results. As there is no automated configuration modification, you must write those numbers (Kp, Ki, Kd) by yourself to your configuration file.
+``
