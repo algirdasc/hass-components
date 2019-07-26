@@ -13,8 +13,7 @@ Required parameters:
 Optional parameters:
 ```
   schedule: <integer> [0, 1 or 2]
-  use_external_temp: <boolean> use external temperature sensor for temperature calculation  
-  initial_operation_mode: <string> - values: eco, auto, 'off', manual'
+  use_external_temp: <boolean> use external temperature sensor for temperature calculation    
   difference: <integer> Analog output offset
   kp: <float> PID parameter, p controll value.
   ki: <float> PID parameter, i controll value.
@@ -28,8 +27,7 @@ Example:
   name: livingroom_floor
   mac: 78:0f:77:00:00:00
   host: 192.168.0.1
-  autotune: "some-overshoot"
-  initial_operation_mode: eco
+  autotune: "some-overshoot"  
   check_interval:
     seconds: 30
   scan_interval:
