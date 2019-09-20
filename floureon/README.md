@@ -1,5 +1,5 @@
 # Intro
-Component for controlling Floureon or other chinese-based WiFi smart thermostat
+Component for controlling Floureon or other chinese-based WiFi smart thermostat. Climate component will have 3 modes: "auto" (in which will used thermostat's internal schedule), "heat (which is "manual" mode) and "off". Also, while in "heat" mode it is possible to use preset "away". Changing mode to other than "heat" will set preset to "none". 
 
 # Configuration
 Required parameters:
