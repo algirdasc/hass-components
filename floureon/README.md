@@ -20,5 +20,5 @@ Example:
   name: livingroom_floor
   mac: 78:0f:77:00:00:00
   host: 192.168.0.1
-  use_extrenal_temp: false
-``
+  use_external_temp: false
+```
