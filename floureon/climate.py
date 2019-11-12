@@ -55,7 +55,7 @@ BROADLINK_ACTIVE = 1
 BROADLINK_IDLE = 0
 BROADLINK_POWER_ON = 1
 BROADLINK_POWER_OFF = 0
-BROADLINK_MODE_AUTO = 1
+BROADLINK_MODE_AUTO = 1 # or 2?
 BROADLINK_MODE_MANUAL = 0
 BROADLINK_SENSOR_INTERNAL = 0
 BROADLINK_SENSOR_EXTERNAL = 1
@@ -147,12 +147,12 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
                     self._preset_mode = PRESET_NONE
                     self._thermostat_current_mode = HVAC_MODE_OFF
                 else:
-                    if data["auto_mode"] == BROADLINK_MODE_AUTO:
+                    if data["auto_mode"] == BROADLINK_MODE_MANUAL:
+                        self._thermostat_current_mode = HVAC_MODE_HEAT
+                    else:
                         # Unset away mode
                         self._preset_mode = PRESET_NONE
                         self._thermostat_current_mode = HVAC_MODE_AUTO
-                    elif data["auto_mode"] == BROADLINK_MODE_MANUAL:
-                        self._thermostat_current_mode = HVAC_MODE_HEAT
 
                 # Thermostat action
                 if data["power"] == BROADLINK_POWER_ON and data["active"] == BROADLINK_ACTIVE:
