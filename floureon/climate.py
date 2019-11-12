@@ -265,8 +265,7 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
         if last_state is not None:
             for param in ['away_setpoint', 'manual_setpoint']:
                 if param in last_state.attributes:
-                    attribute = '_{0}'.format(param)
-                    self[attribute] = last_state.attributes[param]
+                    setattr(self, '_{0}'.format(param), last_state.attributes[param])
 
     async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
