@@ -87,8 +87,11 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
 
         self._min_temp = DEFAULT_MIN_TEMP
         self._max_temp = DEFAULT_MAX_TEMP
-        self._away_temp = DEFAULT_MIN_TEMP
-        self._manual_temp = DEFAULT_MIN_TEMP
+        self._room_temp = None
+        self._external_temp = None
+
+        self._away_setpoint = DEFAULT_MIN_TEMP
+        self._manual_setpoint = DEFAULT_MIN_TEMP
 
         self._preset_mode = None
 
@@ -127,11 +130,11 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
             if device.auth():
                 data = device.get_full_status()
 
-                # Thermostat temperatures
-                if self._use_external_temp is True:
-                    self._thermostat_current_temp = data['external_temp']
-                else:
-                    self._thermostat_current_temp = data['room_temp']
+                # Temperatures
+                self._room_temp = data['room_temp']
+                self._external_temp = data['external_temp']
+
+                self._thermostat_current_temp = data['external_temp'] if self._use_external_temp else data['external_temp']
 
                 # self._hysteresis = int(data['dif'])
                 self._min_temp = int(data['svl'])
@@ -243,8 +246,10 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
     def device_state_attributes(self):
         """Return the attribute(s) of the sensor"""
         return {
-            'away_temp': self._away_temp,
-            'manual_temp': self._manual_temp
+            'away_setpoint': self._away_setpoint,
+            'manual_setpoint': self._manual_setpoint,
+            'external_temp': self._external_temp,
+            'room_temp': self._room_temp,
         }
 
     async def async_added_to_hass(self) -> None:
@@ -258,10 +263,10 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
         last_state = await self.async_get_last_state()
 
         if last_state is not None:
-            if 'away_temp' in last_state.attributes:
-                self._away_temp = last_state.attributes['away_temp']
-            if 'manual_temp' in last_state.attributes:
-                self._manual_temp = last_state.attributes['manual_temp']                
+            for param in ['away_setpoint', 'manual_setpoint']:
+                if param in last_state.attributes:
+                    attribute = '_{0}'.format(param)
+                    self[attribute] = last_state.attributes[param]
 
     async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
@@ -276,9 +281,9 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
 
                     # Save temperatures for future use
                     if self._preset_mode == PRESET_AWAY:
-                        self._away_temp = target_temp
+                        self._away_setpoint = target_temp
                     elif self._preset_mode == PRESET_NONE:
-                        self._manual_temp = target_temp
+                        self._manual_setpoint = target_temp
             except timeout:
                 _LOGGER.error("Thermostat %s set_temperature timeout", self._name)
 
@@ -312,9 +317,9 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
                 device.set_power(BROADLINK_POWER_ON)
                 device.set_mode(BROADLINK_MODE_MANUAL, self._thermostat_loop_mode, self.thermostat_get_sensor())
                 if self._preset_mode == PRESET_AWAY:
-                    device.set_temp(self._away_temp)  
+                    device.set_temp(self._away_setpoint)  
                 elif self._preset_mode == PRESET_NONE:
-                    device.set_temp(self._manual_temp)
+                    device.set_temp(self._manual_setpoint)
         except timeout:
             _LOGGER.error("Thermostat %s set_preset_mode timeout", self._name)
 
