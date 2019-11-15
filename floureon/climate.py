@@ -134,7 +134,7 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
                 self._room_temp = data['room_temp']
                 self._external_temp = data['external_temp']
 
-                self._thermostat_current_temp = data['external_temp'] if self._use_external_temp else data['external_temp']
+                self._thermostat_current_temp = data['external_temp'] if self._use_external_temp else data['room_temp']
 
                 # self._hysteresis = int(data['dif'])
                 self._min_temp = int(data['svl'])
