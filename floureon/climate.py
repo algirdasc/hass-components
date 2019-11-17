@@ -43,7 +43,7 @@ import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_SCHEDULE = 1
+DEFAULT_SCHEDULE = 0
 DEFAULT_USE_EXTERNAL_TEMP = True
 
 CONF_HOST = 'host'
@@ -60,12 +60,14 @@ BROADLINK_MODE_MANUAL = 0
 BROADLINK_SENSOR_INTERNAL = 0
 BROADLINK_SENSOR_EXTERNAL = 1
 BROADLINK_SENSOR_BOTH = 2
+BROADLINK_TEMP_AUTO = 0
+BROADLINK_TEMP_MANUAL = 1
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_HOST): cv.string,
     vol.Required(CONF_MAC): cv.string,
     vol.Required(CONF_NAME): cv.string,
-    vol.Optional(CONF_SCHEDULE, default=DEFAULT_SCHEDULE): vol.Coerce(int),
+    vol.Optional(CONF_SCHEDULE, default=DEFAULT_SCHEDULE): vol.All(int, vol.Range(min=0,max=2)),    
     vol.Optional(CONF_USE_EXTERNAL_TEMP, default=DEFAULT_USE_EXTERNAL_TEMP): cv.boolean,
 })
 
@@ -147,7 +149,8 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
                     self._preset_mode = PRESET_NONE
                     self._thermostat_current_mode = HVAC_MODE_OFF
                 else:
-                    if data["auto_mode"] == BROADLINK_MODE_MANUAL:
+					# Set mode to manual when overriden auto mode or thermostat is in manual mode
+                    if data["auto_mode"] == BROADLINK_MODE_MANUAL or data['temp_manual'] == BROADLINK_TEMP_MANUAL:
                         self._thermostat_current_mode = HVAC_MODE_HEAT
                     else:
                         # Unset away mode
@@ -250,6 +253,7 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
             'manual_setpoint': self._manual_setpoint,
             'external_temp': self._external_temp,
             'room_temp': self._room_temp,
+            'loop_mode': self._thermostat_loop_mode
         }
 
     async def async_added_to_hass(self) -> None:
