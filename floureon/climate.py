@@ -216,7 +216,7 @@ class BroadlinkThermostat(ClimateDevice, RestoreEntity):
         """Return a list of available preset modes.
         Requires SUPPORT_PRESET_MODE.
         """
-        return [PRESET_AWAY, PRESET_NONE]
+        return [PRESET_NONE, PRESET_AWAY]
 
     @property
     def current_temperature(self) -> Optional[float]:
