@@ -1,8 +1,8 @@
 {
   "domain": "floureon",
-  "name": "Floureon PID",
+  "name": "Floureon Thermostat",
   "documentation": "https://github.com/algirdasc/hass-components",
   "dependencies": [],
   "codeowners": [],
-  "requirements": ["broadlink==0.9.0"]
+  "requirements": ["broadlink==0.12.0"]
 }
