@@ -16,12 +16,12 @@ Required parameters:
 ```
 Optional parameters:
 ```
-  schedule: <integer> [0, 1 or 2]
+  *schedule: <integer> [0, 1 or 2]*
   _0 - Schedule 1234567_
   _1 - Schedule 123456,7_
   _2 - Schedule 12345,67_
   
-  use_external_temp: <boolean> 
+ *use_external_temp: <boolean>*
   _Set to true if you want to use thermostat`s external temperature sensor for temperature calculation_
 ```
 Example:
@@ -34,7 +34,7 @@ climate:
   use_external_temp: false
 ```
 
-# Configuration as a Climate
+# Configuration as a Switch
 Required parameters:
 ```
 - platform: floureon
@@ -44,11 +44,14 @@ Required parameters:
 ```
 Optional parameters:
 ```
-  turn_off_mode: <string> 
+  *turn_off_mode: <string>*
+  
   _min_temp - thermostat will be turned off by setting minimum temperature available, 
   turn_off - thermostat will by turned off completely_  
-  turn_on_mode: <string, float>
-  _max_temp - thermostat will be turned on by setting maximum temperature available,
+  
+  *turn_on_mode: <string, float>*
+  
+  _max_temp - thermostat will be turned on by setting maximum temperature available,  
   float (ex. 20.0 - *must be set to float, meaning that dot zero / dot five part is mandatory!*) - thermostat will be turned on by setting desired temperature_
 ```
 Example:
