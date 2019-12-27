@@ -7,7 +7,10 @@ import asyncio
 import datetime
 
 import homeassistant.components.alarm_control_panel as alarm
-from homeassistant.const import (
+from homeassistant.components.alarm_control_panel.const import (
+    SUPPORT_ALARM_ARM_AWAY, SUPPORT_ALARM_ARM_HOME, SUPPORT_ALARM_ARM_NIGHT
+)
+from homeassistant.const import (     
     STATE_ALARM_ARMED_AWAY, STATE_ALARM_ARMED_HOME, STATE_ALARM_ARMED_NIGHT,
     STATE_ALARM_DISARMED, STATE_ALARM_TRIGGERED, STATE_UNKNOWN)
 
@@ -74,6 +77,10 @@ class SecolinkAlarm(alarm.AlarmControlPanel):
         return self._changed_by
 
     @property
+    def supported_features(self):
+        return SUPPORT_ALARM_ARM_AWAY | SUPPORT_ALARM_ARM_HOME | SUPPORT_ALARM_ARM_NIGHT
+
+    @property
     def device_state_attributes(self):
         """Return the state attributes."""
         state_attr = {}
@@ -121,7 +128,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 return
 
             data = data.decode('utf-8')
-            match = re.match('^(.*?),(.*?),(\d{4}),18(\d)(\d{3})(\d{2})(\d{3})$', data)
+            match = re.match('^(.*?),(.*?),(\d{4}),18(\d)(\d{3})([A-F0-9]{2})(\d{3})$', data)
             if not match:
                 _LOGGER.warning("Received unknown message from {0}: {1}".format(self.client_address[0], data))
                 return
@@ -149,8 +156,8 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
             event_area = match.group(6)
             event_zone = match.group(7)
 
-            _LOGGER.debug("Received event from {0}. Type: {1}, Area {2}, Zone {3}".format(
-                self.client_address[0], event_type, event_area, event_zone))
+            _LOGGER.debug("Received event from {0}. Type: {1}, Area {2}, Zone {3}, Qualifier {4}".format(
+                self.client_address[0], event_type, event_area, event_zone, event_qual))
 
             event_type = int(event_type)
             event_qual = int(event_qual)
@@ -166,12 +173,19 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 elif event_qual == QUAL_CLOSE:
                     self.server.secolink._state = STATE_ALARM_ARMED_AWAY
                     self.server.secolink._changed_by = event_zone
-            elif event_type == 441:  # STAY
+            elif event_type == 441 and re.match(r'1\d\d', event_zone):  # STAY
                 if event_qual == QUAL_OPEN:
                     self.server.secolink._state = STATE_ALARM_DISARMED
                     self.server.secolink._changed_by = event_zone
                 elif event_qual == QUAL_CLOSE:
                     self.server.secolink._state = STATE_ALARM_ARMED_HOME
+                    self.server.secolink._changed_by = event_zone
+            elif event_type == 441 and re.match(r'2\d\d', event_zone):  # NIGHT
+                if event_qual == QUAL_OPEN:
+                    self.server.secolink._state = STATE_ALARM_DISARMED
+                    self.server.secolink._changed_by = event_zone
+                elif event_qual == QUAL_CLOSE:
+                    self.server.secolink._state = STATE_ALARM_ARMED_NIGHT
                     self.server.secolink._changed_by = event_zone
             elif event_type == 602:  # HEARTBEAT
                 self.server.secolink._last_heartbeat = datetime.datetime.now()
@@ -196,4 +210,3 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     daemon_threads = True
     allow_reuse_address = True
-
