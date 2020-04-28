@@ -127,6 +127,7 @@ class FloureonSwitch(SwitchDevice, RestoreEntity):
         data = self._thermostat.thermostat_read_status()
         if not data:
             self._state = STATE_UNAVAILABLE
+            return
 
         self._min_temp = int(data['svl'])
         self._max_temp = int(data['svh'])
