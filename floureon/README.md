@@ -13,7 +13,7 @@ If you want to use custom or more advanced controll, you should use switch compo
 | host ***(required)*** | string | | IP or hostname of thermostat
 | mac ***(required)*** | string | | MAC address of thermostat, ex. `AB:CD:EF:00:11:22`
 | name ***(required)*** | string | | Set a custom name which is displayed beside the icon.
-| schedule | integer | `0` | Set which schedule to use
+| schedule | integer | `0` | Set which schedule to use (0 - `12345,67`, 1 - `123456,7`, 2 - `1234567`)
 | use_external_temp | boolen | `true` | Set to false if you want to use thermostat`s internal temperature sensor for temperature calculation
 
 #### Example:
