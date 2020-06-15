@@ -4,5 +4,5 @@
   "documentation": "https://github.com/algirdasc/hass-components",
   "dependencies": [],
   "codeowners": [],
-  "requirements": ["pythoncrc", "broadlink==0.13.0"]
+  "requirements": ["pythoncrc", "broadlink==0.14.0"]
 }
